@@ -1,0 +1,16 @@
+---
+
+- name: Configure stateless edx application instance(s)
+  hosts: all
+  sudo: True
+  gather_facts: True
+  roles:
+    - role: nginx
+      nginx_sites:
+      - cms
+      - lms
+      nginx_default_sites:
+      - lms
+    - role: edxapp
+      celery_worker: True
+    - edxapp
