@@ -5,9 +5,11 @@
 # set +x
 # assume-role(${AWS_MFA_ARN})
 # set -x
-# You can skip set +-x if you aren't concerned about leaking the tokens in your logs.
+# The function also turns off echoing, but using set +x before calling assume-role
+# ensures that your MFA's ARN doesn't leak.
 
 assume-role() {
+    set +x
     ROLE_ARN="${1}"
     SESSIONID=$(date +"%s")
 
@@ -20,5 +22,6 @@ assume-role() {
     export AWS_SECRET_ACCESS_KEY=${RESULT[1]}
     export AWS_SECURITY_TOKEN=${RESULT[2]}
     export AWS_SESSION_TOKEN=${AWS_SECURITY_TOKEN}
+    set -x
 }
 
