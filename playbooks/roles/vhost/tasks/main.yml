@@ -54,13 +54,19 @@
     group: root
     mode: '755'
 
+- name: Stat /etc/ssh/sshd_config
+  stat:
+    path: /etc/ssh/sshd_config
+  register: sshd_config
+
 - name: Update sshd logging to VERBOSE
   lineinfile:
     dest: /etc/ssh/sshd_config
     state: present
     regexp: "^LogLevel .*"
     line: "LogLevel VERBOSE"
-  register: sshd_config
+  register: sshd_config_line1
+  when: sshd_config.stat.exists
 
 - name: Update sshd logging to VERBOSE
   lineinfile:
@@ -68,18 +74,25 @@
     state: present
     regexp: "^PasswordAuthentication .*"
     line: "PasswordAuthentication {{ COMMON_SSH_PASSWORD_AUTH }}"
-  register: sshd_config
+  register: sshd_config_line2
+  when: sshd_config.stat.exists
 
 - name: Restart ssh
   service:
     name: ssh
     state: restarted
   become: True
-  when: sshd_config.changed and ansible_distribution in common_debian_variants
+  when: >
+    sshd_config.stat.exists and
+    (sshd_config_line1.changed or sshd_config_line2.changed) and
+    ansible_distribution in common_debian_variants
 
 - name: Restart ssh
   service:
     name: sshd
     state: restarted
   become: True
-  when: sshd_config.changed and ansible_distribution in common_redhat_variants
+  when: >
+    sshd_config.stat.exists and
+    (sshd_config_line1.changed or sshd_config_line2.changed) and
+    ansible_distribution in common_redhat_variants
