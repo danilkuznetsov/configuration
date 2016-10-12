@@ -1,0 +1,13 @@
+---
+
+- name: Configure datasource instance(s)
+  hosts: all
+  sudo: True
+  gather_facts: True
+  vars_files:
+    - "../roles/edxapp/defaults/main.yml"
+    - "../roles/xqueue/defaults/main.yml"
+  roles:
+    - role: mongo
+    - role: edxlocal
+    - role: edx_ansible

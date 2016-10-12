@@ -1,0 +1,44 @@
+#!/bin/sh
+##
+## Installs the pre-requisites for running edX on a multiple instance Ubuntu 14.04 instance.
+
+
+##
+## Set ppa repository source for gcc/g++ 4.8 in order to install insights properly
+##
+sudo apt-get install -y python-software-properties
+sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+
+##
+## Update and Upgrade apt packages
+##
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+##
+## Install system pre-requisites
+##
+sudo apt-get install -y build-essential software-properties-common curl git-core libxml2-dev libxslt1-dev python-pip libmysqlclient-dev python-apt python-dev libxmlsec1-dev libfreetype6-dev swig gcc-4.8 g++-4.8
+sudo pip install --upgrade pip==8.1.2
+sudo pip install --upgrade setuptools==24.0.3
+sudo -H pip install --upgrade virtualenv==15.0.2
+
+##
+## Update alternatives so that gcc/g++ 4.8 is the default compiler
+##
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+
+##
+## Clone the configuration repository and run Ansible
+##
+cd /var/tmp
+git clone https://github.com/danilkuznetsov/configuration
+cd configuration
+git checkout open-release/eucalyptus.juja
+
+##
+## Install the ansible requirements
+##
+cd /var/tmp/configuration
+sudo -H pip install -r requirements.txt

@@ -1,0 +1,19 @@
+---
+
+- name: Configure common applications and services instance(s)
+  hosts: all
+  sudo: True
+  gather_facts: True
+  vars_files:
+      - "roles/edxapp/defaults/main.yml"
+      - "roles/xqueue/defaults/main.yml"
+  roles:
+     - role: memcache
+     - role: rabbitmq
+     - role: nginx
+       nginx_sites:
+         - xqueue
+       nginx_default_sites:
+         - xqueue
+     - role: xqueue
+       update_users: True
