@@ -5,8 +5,8 @@
   sudo: True
   gather_facts: True
   vars_files:
-      - "roles/edxapp/defaults/main.yml"
-      - "roles/xqueue/defaults/main.yml"
+      - "../roles/edxapp/defaults/main.yml"
+      - "../roles/xqueue/defaults/main.yml"
   roles:
      - role: memcache
      - role: rabbitmq
