@@ -3,6 +3,8 @@ edxlocal_debian_pkgs:
   - postfix
   - libjpeg-dev
 
+EDXLOCAL_MYSQL_ALLOWED_HOST: "localhost"
+
 edxlocal_databases:
   - "{{ ECOMMERCE_DEFAULT_DB_NAME | default(None) }}"
   - "{{ INSIGHTS_DATABASE_NAME | default(None) }}"
