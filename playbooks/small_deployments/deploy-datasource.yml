@@ -10,4 +10,3 @@
   roles:
     - role: mongo
     - role: edxlocal
-    - role: edx_ansible
