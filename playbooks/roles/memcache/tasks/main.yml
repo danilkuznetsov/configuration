@@ -8,3 +8,16 @@
   tags:
     - install
     - install:memcache
+
+# Configure Memcached.
+- name: Copy Memcached configuration.
+  template:
+    src: memcached.conf.j2
+    dest: "{{ memcached_config_file }}"
+    owner: root
+    group: rootq
+    mode: 0644
+  notify: restart memcached
+
+- name: Ensure Memcached is started and set to run on startup.
+  service: name=memcached state=started enabled=yes
