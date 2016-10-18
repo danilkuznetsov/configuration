@@ -5,6 +5,7 @@
     name: memcached
     state: present
     update_cache: yes
+  register: memcached_install
   tags:
     - install
     - install:memcache
@@ -15,7 +16,7 @@
     src: memcached.conf.j2
     dest: "{{ memcached_config_file }}"
     owner: root
-    group: rootq
+    group: root
     mode: 0644
   notify: restart memcached
 
