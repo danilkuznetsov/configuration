@@ -5,7 +5,6 @@
     name: memcached
     state: present
     update_cache: yes
-  register: memcached_install
   tags:
     - install
     - install:memcache
@@ -18,7 +17,6 @@
     owner: root
     group: root
     mode: 0644
-  notify: restart memcached
 
 - name: Ensure Memcached is started and set to run on startup.
-  service: name=memcached state=started enabled=yes
+  service: name=memcached state=restarted enabled=yes
