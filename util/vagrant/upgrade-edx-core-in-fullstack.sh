@@ -13,7 +13,6 @@ exec > >(sudo tee /var/log/edx/upgrade-$(date +%Y%m%d-%H%M%S).log) 2>&1
 # defaults
 CONFIGURATION="fullstack"
 TARGET="named-release/cypress"
-INTERACTIVE=true
 OPENEDX_ROOT="/edx"
 
 # Use this function to exit the script: it helps keep the output right with the
@@ -59,8 +58,6 @@ fi
   sudo pgrep -lf celery | grep worker | awk '{ print $1}' | sudo xargs -I {} kill -9 {}
   sleep 3
   sudo pgrep -lf celery | grep worker | awk '{ print $1}' | sudo xargs -I {} kill -9 {}
-  sudo -u forum git -C ${OPENEDX_ROOT}/app/forum/.rbenv reset --hard
-
 
 if [[ -f ${OPENEDX_ROOT}/app/edx_ansible/server-vars.yml ]]; then
   SERVER_VARS="--extra-vars=\"@${OPENEDX_ROOT}/app/edx_ansible/server-vars.yml\""
@@ -89,6 +86,10 @@ git clone https://github.com/danilkuznetsov/configuration.git \
   --depth=1 --single-branch --branch="named-release/cypress.juja"
 make_config_venv
 
+# Remove old venvs
+sudo -u edxapp rm -rf /edx/app/edxapp/venvs/edxapp
+sudo -u xqueue rm -rf /edx/app/xqueue/venvs/xqueue
+
 # Update to target.
 
 echo "Updating to final version of code"
@@ -105,6 +106,7 @@ echo "PROGRAMS_VERSION: $TARGET" >> vars.yml
 $ANSIBLE_PLAYBOOK \
     --extra-vars="@vars.yml" \
     $SERVER_VARS \
+    --skip-tags="edxapp-sandbox" \
     vagrant-update-core-$CONFIGURATION.yml
 cd ../..
 
