@@ -1,0 +1,31 @@
+- name: Configure instance(s)
+  hosts: all
+  sudo: True
+  gather_facts: True
+  vars:
+    migrate_db: 'yes'
+    openid_workaround: true
+    EDXAPP_LMS_NGINX_PORT: '80'
+    EDX_ANSIBLE_DUMP_VARS: true
+    CERTS_DOWNLOAD_URL: 'http://192.168.33.10:18090'
+    CERTS_VERIFY_URL: 'http://192.168.33.10:18090'
+    # used for releases
+    edx_platform_version: '{{ OPENEDX_RELEASE | default("master") }}'
+    xqueue_version: '{{ OPENEDX_RELEASE | default("master") }}'
+  roles:
+    - common
+    - vhost
+    - edx_ansible
+    - user
+    - role: nginx
+      nginx_sites:
+      - cms
+      - lms
+      - xqueue
+      nginx_default_sites:
+      - lms
+      - cms
+    - edxlocal
+    - edxapp
+    - { role: 'edxapp', celery_worker: True }
+    - { role: "xqueue", update_users: True }
