@@ -27,7 +27,7 @@
     dest: "{{ item.dest }}"
     state: link
   with_items:
-    - { path: '{{ nginx_default_grades_dir }}', dest:'/edx/var/edxapp/media/'}
+    - { path: '{{ nginx_default_grades_dir }}', dest: '/edx/var/edxapp/media/'}
 
 - name: Add apt key
   apt_key:
