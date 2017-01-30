@@ -60,6 +60,7 @@ NGINX_SERVER_HTML_FILES:
 NGINX_APT_REPO: deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx
 
 
+nginx_default_grades_dir: "/tmp/edx-s3/grades/"
 nginx_app_dir: "{{ COMMON_APP_DIR }}/nginx"
 nginx_data_dir: "{{ COMMON_DATA_DIR }}/nginx"
 nginx_server_static_dir: "{{ nginx_data_dir }}/server-static"
