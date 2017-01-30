@@ -228,7 +228,7 @@ error_page {{ k }} {{ v }};
 
 location ~ ^{{ EDXAPP_MEDIA_URL }}/(?P<file>.*) {
     root {{ edxapp_media_dir }};
-    try_files /$file =404;
+    try_files /$file /grades/$file =404;
     expires {{ EDXAPP_PROFILE_IMAGE_MAX_AGE }}s;
 }
 
