@@ -21,15 +21,13 @@
     - install
     - install:configuration
 
-- name: Install needed packages
-  apt:
-    name: "{{ item }}"
-    state: present
-  notify: restart nginx
-  with_items: "{{ nginx_debian_pkgs }}"
-  tags:
-    - install
-    - install:system-requirements
+- name: Create symbolic link to default grades-bucket
+  file:
+    src: "{{ item.path }}"
+    dest: "{{ item.dest }}"
+    state: link
+  with_items:
+    - { path: '{{ nginx_default_grades_dir }}', dest: '/edx/var/edxapp/media/'}
 
 - name: Add apt key
   apt_key:
